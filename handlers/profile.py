@@ -1,5 +1,3 @@
-import random
-import re
 import sqlite3
 
 from aiogram import types, Dispatcher
@@ -11,6 +9,8 @@ from keyboards.profile_inline_buttons import (
     my_profile_keyboard,
     like_dislike_keyboard,
 )
+import random
+import re
 
 
 async def my_profile_call(call: types.CallbackQuery):
@@ -29,8 +29,6 @@ async def my_profile_call(call: types.CallbackQuery):
                     bio=profile['bio'],
                     age=profile['age'],
                     sign=profile['sign'],
-                    gio=profile['gio'],
-                    mar=profile['mar'],
                 ),
                 reply_markup=await my_profile_keyboard()
             )
@@ -76,6 +74,9 @@ async def random_filter_profile_call(call: types.CallbackQuery):
 
 
 async def detect_like_call(call: types.CallbackQuery):
+    # print(call.data)
+    # print(call.data[5:])
+    # print(call.data.replace("like_", ""))
     owner = re.sub("like_", "", call.data)
     print(owner)
     db = Database()

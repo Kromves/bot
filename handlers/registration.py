@@ -1,4 +1,5 @@
 import sqlite3
+
 from aiogram import types, Dispatcher
 from config import bot, MEDIA_DESTINATION
 from database import bot_db
@@ -13,14 +14,13 @@ class RegistrationStates(StatesGroup):
     biography = State()
     age = State()
     zodiac_sign = State()
-    gender = State()  # Новое состояние для пола
-    marital_status = State()  # Новое состояние для семейного положения
     photo = State()
+
 
 async def registration_start(call: types.CallbackQuery):
     await bot.send_message(
         chat_id=call.from_user.id,
-        text="Отправьте мне ваш никнейм, пожалуйста!"
+        text="Send me ur Nickname, please!"
     )
     await RegistrationStates.nickname.set()
 
@@ -33,7 +33,7 @@ async def load_nickname(message: types.Message,
 
     await bot.send_message(
         chat_id=message.from_user.id,
-        text='Отправьте мне вашу биографию!'
+        text='Send me ur Biography!'
     )
     await RegistrationStates.next()
 
@@ -46,9 +46,9 @@ async def load_bio(message: types.Message,
 
     await bot.send_message(
         chat_id=message.from_user.id,
-        text="Сколько вам лет?\n"
-             "(Отправьте только числовой текст)\n"
-             "Пример: 27 или 29"
+        text="How old r u ?\n"
+             "(Send me only numeric text)\n"
+             "Example: 27 or 29"
     )
     await RegistrationStates.next()
 
@@ -60,9 +60,9 @@ async def load_age(message: types.Message,
     except ValueError:
         await bot.send_message(
             chat_id=message.from_user.id,
-            text="Я просил отправить только числовой текст\n"
-                 "Регистрация не удалась ❌\n"
-                 "Пожалуйста, начните регистрацию заново!!!"
+            text="I told u send me ONLY numeric text\n"
+                 "registration failed ❌\n"
+                 "Restart registration!!!"
         )
         await state.finish()
         return
@@ -73,7 +73,7 @@ async def load_age(message: types.Message,
 
     await bot.send_message(
         chat_id=message.from_user.id,
-        text='Теперь отправьте мне ваш знак зодиака'
+        text='Now send me ur zodiac sign'
     )
     await RegistrationStates.next()
 
@@ -86,34 +86,8 @@ async def load_zodiac_sign(message: types.Message,
 
     await bot.send_message(
         chat_id=message.from_user.id,
-        text="Укажите ваш пол"
-    )
-    await RegistrationStates.next()
-
-
-async def load_gender(message: types.Message,
-                     state: FSMContext):
-    async with state.proxy() as data:
-        data['gender'] = message.text
-        print(data)
-
-    await bot.send_message(
-        chat_id=message.from_user.id,
-        text='Укажите ваше семейное положение'
-    )
-    await RegistrationStates.next()
-
-
-async def load_marital_status(message: types.Message,
-                              state: FSMContext):
-    async with state.proxy() as data:
-        data['marital_status'] = message.text
-        print(data)
-
-    await bot.send_message(
-        chat_id=message.from_user.id,
-        text="Отправьте мне ваше фото\n"
-             "только в формате фотографии"
+        text="Send me ur photo\n"
+             "only in photo format"
     )
     await RegistrationStates.next()
 
@@ -132,8 +106,6 @@ async def load_photo(message: types.Message,
             bio=data['bio'],
             age=data['age'],
             sign=data['sign'],
-            gender=data['gender'],  # Добавлено поле пола
-            marital_status=data['marital_status'],  # Добавлено поле семейного положения
             photo=path.name
         )
 
@@ -146,14 +118,12 @@ async def load_photo(message: types.Message,
                     bio=data['bio'],
                     age=data['age'],
                     sign=data['sign'],
-                    gender=data['gender'],  # Добавлено поле пола
-                    marital_status=data['marital_status'],  # Добавлено поле семейного положения
                 )
             )
     await bot.send_message(
         chat_id=message.from_user.id,
-        text="Вы успешно зарегистрировались 🎉🍾\n"
-             "Поздравляю!!!"
+        text="U have successfully registered 🎉🍾\n"
+             "Congrats!!!"
     )
     await state.finish()
 
@@ -181,16 +151,6 @@ def register_registration_handlers(dp: Dispatcher):
     dp.register_message_handler(
         load_zodiac_sign,
         state=RegistrationStates.zodiac_sign,
-        content_types=['text']
-    )
-    dp.register_message_handler(
-        load_gender,
-        state=RegistrationStates.gender,
-        content_types=['text']
-    )
-    dp.register_message_handler(
-        load_marital_status,
-        state=RegistrationStates.marital_status,
         content_types=['text']
     )
     dp.register_message_handler(
