@@ -7,7 +7,7 @@ from config import bot, MEDIA_DESTINATION
 from database import bot_db
 from keyboards import start_inline_buttons
 import const
-from scraping.news_scraper import NewsScraper
+# from scraping.news_scraper import NewsScraper
 
 
 async def start_button(message: types.Message):
@@ -54,16 +54,16 @@ async def start_button(message: types.Message):
         )
 
 
-async def latest_news_call(call: types.CallbackQuery):
-    scraper = NewsScraper()
-    data = scraper.scrape_data()
-    print()
-    db.insert_news()
-    for i in data[:4]:
-        await bot.send_message(
-            chat_id=call.from_user.id,
-            text=scraper.PLUS_URL + i
-        )
+# async def latest_news_call(call: types.CallbackQuery):
+#     scraper = NewsScraper()
+#     data = scraper.scrape_data()
+#     print()
+#     db.insert_news()
+#     for i in data[:4]:
+#         await bot.send_message(
+#             chat_id=call.from_user.id,
+#             text=scraper.PLUS_URL + i
+#         )
 
 
 def register_start_handlers(dp: Dispatcher):
@@ -71,7 +71,7 @@ def register_start_handlers(dp: Dispatcher):
         start_button,
         commands=['start']
     )
-    dp.register_callback_query_handler(
-        latest_news_call,
-        lambda call: call.data == "latest_news"
-    )
+    # dp.register_callback_query_handler(
+    #     latest_news_call,
+    #     lambda call: call.data == "latest_news"
+    # )

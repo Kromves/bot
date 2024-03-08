@@ -169,3 +169,10 @@ class Database:
         )
         self.connection.commit()
 
+    def get_referrals(self, owner_telegram_id):
+        self.cursor.execute(
+            sql_queries.SELECT_REFERRALS_QUERY,
+            (owner_telegram_id,)
+        )
+        referrals = self.cursor.fetchall()
+        return referrals
